@@ -43,28 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case  R.id.but_log:
-                Map<String, String> treeMap=new TreeMap<>();
-
-                treeMap.put("mobileType","2");
-                treeMap.put("versionNumber","1.0.3");
-                treeMap.put("loginName","17671623091");
-                treeMap.put("loginPwd","E67C10A4C8FBFC0C400E047BB9A056A1");
-                treeMap.put("serialVersionUID","402476310254065018");
-                TreeMap map = new TreeMap();
-                map.putAll(treeMap);
-                String uuid = getUUid();
-                String sign = getSign(map,uuid);
                 OkGo.<String>post(Urls.URL_METHOD)//
                         .tag(this)//
-                        .params("versionNumber", "1.0.3")
                         .params("loginName", "17671623091")
                         .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
-                        .params("mobileType", "2")
-                        .params("serialVersionUID", "402476310254065018")
-                        .headers("signMsg", sign)
-                        .headers("token","")
-                        .headers("uuid", uuid)
-                        .isMultipart(true)
+                        .isMultipart(false)
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
@@ -77,49 +60,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    public String getUUid(){
-        return getRandomString(32);
-    }
-    public  String getRandomString(int length) { //length表示生成字符串的长度
-        String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-    /**
-     * 一般接口调用-signa签名生成规则
-     *
-     * @param map
-     *         有序请求参数map
-     */
-    private String getSign(TreeMap map, String uuid) {
-        String signa = "";
-        try {
-            Iterator it = map.entrySet().iterator();
-            StringBuilder sb = new StringBuilder();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                if (entry.getValue() instanceof File)
-                    continue;//URLEncoder.encode(, "UTF-8")
-                sb.append(entry.getKey()).append("=").append(URLDecoder.decode(entry.getValue().toString(), "UTF-8")).append("|");
-            }
-            // 所有请求参数排序后的字符串后进行MD5（32）
-            //signa = MDUtil.encode(MDUtil.TYPE.MD5, sb.toString());
-            // 得到的MD5串拼接appsecret再次MD5，所得结果转大写
-            String sign = "";
-            if (sb.toString().length() > 1) {
-                sign = sb.toString().substring(0, sb.length() - 1);
-            } else {
-                sign = sb.toString();
-            }
-            signa = MDUtil.encode(MDUtil.TYPE.MD5, "wI3Ri3pntEs6CXp5VlLGlQtxHLKqONp5OQ4Yk6WxcZcAZGYYnyycRJo895qf"  + sign + uuid).toUpperCase();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return signa;
-    }
+
 }
