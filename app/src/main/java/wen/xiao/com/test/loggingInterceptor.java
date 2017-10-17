@@ -1,5 +1,6 @@
 package wen.xiao.com.test;
 
+import android.content.Context;
 import android.provider.SyncStateContract;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +34,10 @@ import okio.Buffer;
 
 public class loggingInterceptor implements Interceptor {
 
+     static Context context;
+    public loggingInterceptor(Context app) {
+        this.context=app;
+    }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -44,8 +49,14 @@ public class loggingInterceptor implements Interceptor {
         map.putAll(dynamicParams(postBodyString));
         String uuid = getUUid();
         String sign = getSign(map,uuid);
-        //添加到header里面
-        requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", "").addHeader("uuid", uuid);
+        SPUtil sp=new SPUtil(context,"Test");
+        String token =sp.getString("Token","");
+//        if (token==null||token.endsWith("token")){
+//            requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", "").addHeader("uuid", uuid);
+//
+//        }else
+//        //添加到header里面
+        requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", token).addHeader("uuid", uuid);
         return chain.proceed(requestBuilder.build());
     }
 
@@ -147,7 +158,9 @@ public class loggingInterceptor implements Interceptor {
             } else {
                 sign = sb.toString();
             }
-            signa = MDUtil.encode(MDUtil.TYPE.MD5, "wI3Ri3pntEs6CXp5VlLGlQtxHLKqONp5OQ4Yk6WxcZcAZGYYnyycRJo895qf" + sign + uuid).toUpperCase();
+            SPUtil sp=new SPUtil(context,"Test");
+            String token =sp.getString("Token","");
+            signa = MDUtil.encode(MDUtil.TYPE.MD5, "wI3Ri3pntEs6CXp5VlLGlQtxHLKqONp5OQ4Yk6WxcZcAZGYYnyycRJo895qf" +token+ sign + uuid).toUpperCase();
         } catch (Exception e) {
             e.printStackTrace();
         }

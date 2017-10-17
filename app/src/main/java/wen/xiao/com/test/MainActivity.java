@@ -9,9 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.Callback;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.io.File;
 import java.net.URLDecoder;
@@ -21,6 +26,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+
+import wen.xiao.com.test.entity.use;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private Button but_log,but_get;
@@ -43,20 +50,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case  R.id.but_log:
+                final SPUtil spUtil=new SPUtil(MainActivity.this,"Test");
+                spUtil.clear();
                 OkGo.<String>post(Urls.URL_METHOD)//
                         .tag(this)//
                         .params("loginName", "17671623091")
                         .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
+//                        .params("versionNumber", "1.0.3")
+//                        .params("mobileType", "2")
+//                        .params("serialVersionUID", "402476310254065018")
                         .isMultipart(false)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                Gson gson = new Gson();
+                                use app = gson.fromJson(response.body().toString(), use.class);
+                                if(app.getData()!=null){
+                                    spUtil.putString("Token",app.getData().getToken());
+                                    textView.setText(app.getData().getToken()+"");
+                                }
+
+
+
+                            }
+                        });
+//                OkGo.<String>post(Urls.URL_METHOD)//
+//                        .tag(this)//
+//                        .params("loginName", "17671623091")
+//                        .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
+//                        .isMultipart(false)
+//                        .execute(new StringCallback() {
+//                            @Override
+//                            public void onSuccess(Response<String> response) {
+//                                textView.setText(response.body());
+//                                Log.d("xiaowen",response.body());
+//
+//                            }
+//                        });
+            break;
+            case  R.id.but_get:
+                SPUtil sp=new SPUtil(this,"Test");
+                String token =sp.getString("Token","");
+                OkGo.<String>post(Urls.URL_Token)//
+                        .tag(this)//
+                        .isMultipart(false)
+                        .params("current",1)
+                        .params("pageSize",10)
+                        .params("pages",0)
+                        .params("total",0)
+                        .params("token",token)
+                        .params("userId","953")
+//                        .params("versionNumber", "1.0.3")
+//                        .params("mobileType", "2")
+//                        .params("serialVersionUID", "402476310254065018")
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
                                 textView.setText(response.body());
                                 Log.d("xiaowen",response.body());
+
                             }
                         });
-            break;
-            case  R.id.but_get:
+
                 break;
         }
     }
