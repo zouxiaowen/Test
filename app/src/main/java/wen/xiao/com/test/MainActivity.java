@@ -51,14 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case  R.id.but_log:
                 final SPUtil spUtil=new SPUtil(MainActivity.this,"Test");
+                final SPUtil spUtil_id=new SPUtil(MainActivity.this,"userId");
                 spUtil.clear();
+                spUtil_id.clear();
                 OkGo.<String>post(Urls.URL_METHOD)//
                         .tag(this)//
                         .params("loginName", "17671623091")
                         .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
-//                        .params("versionNumber", "1.0.3")
-//                        .params("mobileType", "2")
-//                        .params("serialVersionUID", "402476310254065018")
                         .isMultipart(false)
                         .execute(new StringCallback() {
                             @Override
@@ -67,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 use app = gson.fromJson(response.body().toString(), use.class);
                                 if(app.getData()!=null){
                                     spUtil.putString("Token",app.getData().getToken());
+                                    spUtil_id.putInt("useId",app.getData().getUserId());
                                     textView.setText(app.getData().getToken()+"");
+                                    Log.d("===",response.body().toString());
                                 }
 
 
@@ -98,11 +99,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .params("pageSize",10)
                         .params("pages",0)
                         .params("total",0)
-                        .params("token",token)
-                        .params("userId","953")
-//                        .params("versionNumber", "1.0.3")
-//                        .params("mobileType", "2")
-//                        .params("serialVersionUID", "402476310254065018")
+//                        .params("token",token)
+//                        .params("userId","953")
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
