@@ -15,6 +15,8 @@
  */
 package wen.xiao.com.test.callback;
 
+import android.util.Log;
+
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
 
@@ -68,5 +70,15 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
 
         JsonConvert<T> convert = new JsonConvert<>(type);
         return convert.convertResponse(response);
+    }
+
+    @Override
+    public void onError(com.lzy.okgo.model.Response<T> response) {
+        Throwable throwable=response.getException();
+        if (throwable!=null) throwable.printStackTrace();
+        if (throwable instanceof  IllegalStateException){
+            String message=throwable.getMessage();
+            Log.d("error",message);
+        }
     }
 }
