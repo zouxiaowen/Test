@@ -11,8 +11,11 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import java.util.List;
+
 import wen.xiao.com.test.callback.JsonCallback;
 import wen.xiao.com.test.callback.LzyResponse;
+import wen.xiao.com.test.entity.brow;
 import wen.xiao.com.test.entity.use;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case  R.id.but_get:
                 SPUtil sp=new SPUtil(this,"Test");
                 String token =sp.getString("Token","");
-                OkGo.<String>post(Urls.URL_Token)//
+                OkGo.<LzyResponse<brow>>post(Urls.URL_Token)//
                         .tag(this)//
                         .isMultipart(false)
                         .params("current",1)
@@ -88,12 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .params("total",0)
 //                        .params("token",token)
 //                        .params("userId","953")
-                        .execute(new StringCallback() {
+                        .execute(new JsonCallback<LzyResponse<brow>>() {
                             @Override
-                            public void onSuccess(Response<String> response) {
-                                textView.setText(response.body());
-                                Log.d("xiaowen",response.body());
-
+                            public void onSuccess(Response<LzyResponse<brow>> response) {
+                                textView.setText(response.body().toString());
+                                Log.d("xiaowen",response.body().toString());
                             }
                         });
 

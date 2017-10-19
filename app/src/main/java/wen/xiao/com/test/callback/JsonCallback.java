@@ -16,6 +16,7 @@
 package wen.xiao.com.test.callback;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
@@ -24,6 +25,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import okhttp3.Response;
+import wen.xiao.com.test.utils.ToastUtil;
 
 /**
  * ================================================
@@ -79,6 +81,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         if (throwable instanceof  IllegalStateException){
             String message=throwable.getMessage();
             Log.d("error",message);
+            ToastUtil.toast(message);
         }
     }
 }
