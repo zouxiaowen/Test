@@ -33,7 +33,7 @@ import okio.Buffer;
  */
 
 public class loggingInterceptor implements Interceptor {
-
+    private Map<String, String> headerParamsMap = new HashMap<>();
      static Context context;
     public loggingInterceptor(Context app) {
         this.context=app;
@@ -48,15 +48,19 @@ public class loggingInterceptor implements Interceptor {
         TreeMap map = new TreeMap();
         map.putAll(dynamicParams(postBodyString));
         String uuid = getUUid();
-        String sign = getSign(map,uuid);
         SPUtil sp=new SPUtil(context,"Test");
         String token =sp.getString("Token","");
-//        if (token==null||token.endsWith("token")){
-//            requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", "").addHeader("uuid", uuid);
-//
-//        }else
+       if (originRequest.method().endsWith("POST")){
+           String sign = getSign(map,uuid);
 //        //添加到header里面
-        requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", token).addHeader("uuid", uuid);
+           requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", token).addHeader("uuid", uuid);
+       }else if (originRequest.method().endsWith("GET")){
+            Map map_get = splitGetUrl(originRequest.url().toString(), headerParamsMap);
+           TreeMap maps = new TreeMap(map_get);
+           String sign = getSign(maps,uuid);
+           //        //添加到header里面
+           requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", token).addHeader("uuid", uuid);
+       }
         return chain.proceed(requestBuilder.build());
     }
 
@@ -166,5 +170,24 @@ public class loggingInterceptor implements Interceptor {
         }
         return signa;
     }
-
+    private Map splitGetUrl(String url, Map bodyParamsMap) {
+        Map signMap = new HashMap();
+        signMap.putAll(bodyParamsMap);
+        if (url.split("\\?").length > 1) {
+            String              paramStr = url.split("\\?")[1];
+            String[]            params   = paramStr.split("&");
+            Map<String, String> temp;
+            for (int i = 0; i < params.length; i++) {
+                temp = new HashMap<>();
+                String[] s = params[i].split("=");
+                if (s.length > 1) {
+                    temp.put(s[0], s[1]);
+                } else {
+                    temp.put(s[0], "");
+                }
+                signMap.putAll(temp);
+            }
+        }
+        return signMap;
+    }
 }

@@ -20,9 +20,19 @@
                 android:id="@+id/but_log"
                 android:layout_height="50dp" />
             <Button
+                android:id="@+id/but_post"
+                android:layout_width="match_parent"
+                android:text="post获取数据"
+                android:layout_height="50dp" />
+            <Button
                 android:id="@+id/but_get"
                 android:layout_width="match_parent"
-                android:text="回去数据信息"
+                android:text="get获取银行卡数据"
+                android:layout_height="50dp" />
+            <Button
+                android:id="@+id/but_agreement"
+                android:layout_width="match_parent"
+                android:text="get获取协议数据"
                 android:layout_height="50dp" />
             <TextView
                 android:id="@+id/textview"

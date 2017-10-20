@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -15,11 +16,13 @@ import java.util.List;
 
 import wen.xiao.com.test.callback.JsonCallback;
 import wen.xiao.com.test.callback.LzyResponse;
+import wen.xiao.com.test.entity.Bank;
+import wen.xiao.com.test.entity.GG;
 import wen.xiao.com.test.entity.brow;
 import wen.xiao.com.test.entity.use;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button but_log,but_get;
+    private Button but_log,but_post,but_get,but_agreement;
     private TextView textView;
 
     @Override
@@ -31,8 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void InItView(){
         but_log= (Button) findViewById(R.id.but_log);
         but_log.setOnClickListener(this);
+        but_post= (Button) findViewById(R.id.but_post);
+        but_post.setOnClickListener(this);
         but_get= (Button) findViewById(R.id.but_get);
         but_get.setOnClickListener(this);
+        but_agreement= (Button) findViewById(R.id.but_agreement);
+        but_agreement.setOnClickListener(this);
         textView= (TextView) findViewById(R.id.textview);
     }
     @Override
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
             break;
-            case  R.id.but_get:
+            case  R.id.but_post:
                 SPUtil sp=new SPUtil(this,"Test");
                 String token =sp.getString("Token","");
                 OkGo.<LzyResponse<brow>>post(Urls.URL_Token)//
@@ -99,6 +106,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
 
+                break;
+            case R.id.but_get:
+//                OkGo.<String>get(Urls.URL_Get)
+//                        .tag(this)
+//                        .params("type","BANK_TYPE")
+//                        .execute(new StringCallback() {
+//                            @Override
+//                            public void onSuccess(Response<String> response) {
+//                                Gson gson = new Gson();
+//                                Bank app = gson.fromJson(response.body().toString(), Bank.class);
+//                                textView.setText(app.getData().getBankTypeList().get(0).getValue());
+//                            }
+//                        });
+
+                OkGo.<LzyResponse<GG>>get(Urls.URL_Get)
+                        .tag(this)
+                        .params("type","BANK_TYPE")
+                        .execute(new JsonCallback<LzyResponse<GG>>() {
+                            @Override
+                            public void onSuccess(Response<LzyResponse<GG>> response) {
+                                try {
+                                    textView.setText(response.body().data.getBankTypeList().get(0).getValue());
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                break;
+            case R.id.but_agreement:
+                OkGo.<String>get(Urls.URL_XIEYI)
+                        .tag(this)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                try{
+                                    textView.setText(response.body().toString());
+                                    Log.d("xiaowen",response.body().toString());
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                 break;
         }
     }
