@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .execute(new JsonCallback<LzyResponse<use>>() {
                             @Override
                             public void onSuccess(Response<LzyResponse<use>> response) {
-                                Log.d("JsonCallback",response.body().toString());
                                 spUtil.putString("Token",response.body().data.getToken());
                                     spUtil_id.putInt("useId",response.body().data.getUserId());
                                 textView.setText(response.body().data.getUserId()+"");
@@ -96,13 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .params("pageSize",10)
                         .params("pages",0)
                         .params("total",0)
-//                        .params("token",token)
-//                        .params("userId","953")
                         .execute(new JsonCallback<LzyResponse<brow>>() {
                             @Override
                             public void onSuccess(Response<LzyResponse<brow>> response) {
                                 textView.setText(response.body().toString());
-                                Log.d("xiaowen",response.body().toString());
                             }
                         });
 
@@ -142,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(Response<String> response) {
                                 try{
                                     textView.setText(response.body().toString());
-                                    Log.d("xiaowen",response.body().toString());
+                                    //Log.d("xiaowen",response.body().toString());
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
