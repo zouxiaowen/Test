@@ -3,11 +3,13 @@ package wen.xiao.com.test;
 import android.app.Application;
 
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpParams;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
 
@@ -31,8 +33,13 @@ public class APP extends Application {
         params.put("userId",useId);
         params.put("Token",token);
         loggingInterceptor lp=new loggingInterceptor(getApplicationContext());
+//        builder.addInterceptor(new LoggingInterceptor_rizhi());
         builder.addInterceptor(lp);
-
+        //log相关
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkGo");
+        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);        //log打印级别，决定了log显示的详细程度
+        loggingInterceptor.setColorLevel(Level.INFO);                               //log颜色级别，决定了log在控制台显示的颜色
+        builder.addInterceptor(loggingInterceptor);                                 //添加OkGo默认debug日志
         OkGo.getInstance()
                 .setOkHttpClient(builder.build())
                 .addCommonParams(params)
