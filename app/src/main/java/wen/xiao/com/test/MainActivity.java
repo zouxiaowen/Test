@@ -12,17 +12,20 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import java.io.File;
 import java.util.List;
 
 import wen.xiao.com.test.callback.JsonCallback;
+import wen.xiao.com.test.callback.JsonCallback_two;
 import wen.xiao.com.test.callback.LzyResponse;
 import wen.xiao.com.test.entity.Bank;
 import wen.xiao.com.test.entity.GG;
 import wen.xiao.com.test.entity.brow;
 import wen.xiao.com.test.entity.use;
+import wen.xiao.com.test.utils.ToastUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button but_log,but_post,but_get,but_agreement;
+    private Button but_log,but_post,but_get,but_agreement,but_image;
     private TextView textView;
 
     @Override
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         but_get.setOnClickListener(this);
         but_agreement= (Button) findViewById(R.id.but_agreement);
         but_agreement.setOnClickListener(this);
+        but_image= (Button) findViewById(R.id.but_image);
+        but_image.setOnClickListener(this);
         textView= (TextView) findViewById(R.id.textview);
     }
     @Override
@@ -50,33 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 final SPUtil spUtil_id=new SPUtil(MainActivity.this,"userId");
                 spUtil.clear();
                 spUtil_id.clear();
-//                OkGo.<String>post(Urls.URL_METHOD)//
-//                        .tag(this)//
-//                        .params("loginName", "17671623091")
-//                        .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
-//                        .isMultipart(false)
-//                        .execute(new StringCallback() {
-//                            @Override
-//                            public void onSuccess(Response<String> response) {
-//                                Gson gson = new Gson();
-//                                use app = gson.fromJson(response.body().toString(), use.class);
-//                                if(app.getData()!=null){
-//                                    spUtil.putString("Token",app.getData().getToken());
-//                                    spUtil_id.putInt("useId",app.getData().getUserId());
-//                                    textView.setText(app.getData().getToken()+"");
-//                                    Log.d("===",response.body().toString());
-//                                }
-//
-//
-//
-//                            }
-//                        });
                 OkGo.<LzyResponse<use>>post(Urls.URL_METHOD)//
                         .tag(this)//
                         .params("loginName", "17671623091")
                         .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
                         .isMultipart(false)
-                        .execute(new JsonCallback<LzyResponse<use>>() {
+                        .execute(new JsonCallback<LzyResponse<use>>(this) {
                             @Override
                             public void onSuccess(Response<LzyResponse<use>> response) {
                                 spUtil.putString("Token",response.body().data.getToken());
@@ -95,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .params("pageSize",10)
                         .params("pages",0)
                         .params("total",0)
-                        .execute(new JsonCallback<LzyResponse<brow>>() {
+                        .execute(new JsonCallback<LzyResponse<brow>>(this) {
                             @Override
                             public void onSuccess(Response<LzyResponse<brow>> response) {
                                 textView.setText(response.body().toString());
@@ -104,22 +88,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.but_get:
-//                OkGo.<String>get(Urls.URL_Get)
-//                        .tag(this)
-//                        .params("type","BANK_TYPE")
-//                        .execute(new StringCallback() {
-//                            @Override
-//                            public void onSuccess(Response<String> response) {
-//                                Gson gson = new Gson();
-//                                Bank app = gson.fromJson(response.body().toString(), Bank.class);
-//                                textView.setText(app.getData().getBankTypeList().get(0).getValue());
-//                            }
-//                        });
 
                 OkGo.<LzyResponse<GG>>get(Urls.URL_Get)
                         .tag(this)
                         .params("type","BANK_TYPE")
-                        .execute(new JsonCallback<LzyResponse<GG>>() {
+                        .execute(new JsonCallback<LzyResponse<GG>>(this) {
                             @Override
                             public void onSuccess(Response<LzyResponse<GG>> response) {
                                 try {
@@ -138,10 +111,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(Response<String> response) {
                                 try{
                                     textView.setText(response.body().toString());
-                                    //Log.d("xiaowen",response.body().toString());
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
+                            }
+                        });
+                break;
+            case R.id.but_image:
+                OkGo.<String>post(Urls.URL_FILE)//
+                        .tag(this)//
+                        .params("confidence","1")
+                        .params("livingImg","1")
+                        .params("userId","1")
+                        .isSpliceUrl(true)
+                        .isMultipart(false)
+                        .upFile(new File(BaseParams.FACE_PHOTO_PATH + "/" + BaseParams.PHOTO_ALIVE))//
+                        .execute(new JsonCallback_two<String>(this) {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+
                             }
                         });
                 break;

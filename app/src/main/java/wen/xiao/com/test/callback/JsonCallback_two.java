@@ -17,7 +17,6 @@ package wen.xiao.com.test.callback;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.HttpParams;
@@ -25,6 +24,8 @@ import com.lzy.okgo.request.base.Request;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import okhttp3.Response;
 import wen.xiao.com.test.SPUtil;
@@ -39,20 +40,20 @@ import wen.xiao.com.test.utils.ToastUtil;
  * 修订历史：
  * ================================================
  */
-public abstract class JsonCallback<T> extends AbsCallback<T> {
+public abstract class JsonCallback_two<T> extends AbsCallback<T> {
 
     private Type type;
     private Class<T> clazz;
     private Context context;
-    public JsonCallback(Context context) {
+    public JsonCallback_two(Context context) {
         this.context=context;
     }
 
-    public JsonCallback(Type type) {
+    public JsonCallback_two(Type type) {
         this.type = type;
     }
 
-    public JsonCallback(Class<T> clazz) {
+    public JsonCallback_two(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -68,11 +69,14 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         String token =sp.getString("Token","");
         SPUtil sp_id=new SPUtil(context,"useId");
         int useId =sp_id.getInt("useId",0);
-        request. params("versionNumber", "1.0.3").
-        params("mobileType", "2").
-        params("serialVersionUID", "402476310254065018").
-        params("userId",useId).
-        params("Token",token);
+        HttpParams par = request.getParams();
+        LinkedHashMap<String, List<String>> map = par.urlParamsMap;
+
+//        request. params("versionNumber", "1.0.3").
+//        params("mobileType", "2").
+//        params("serialVersionUID", "402476310254065018").
+//        params("userId",useId).
+//        params("Token",token);
 //        request.headers("header1", "HeaderValue1")//
 //                .params("params1", "ParamsValue1")//
 //                .params("token", "3215sdf13ad1f65asd4f3ads1f");

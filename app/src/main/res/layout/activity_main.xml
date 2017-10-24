@@ -34,6 +34,11 @@
                 android:layout_width="match_parent"
                 android:text="get获取协议数据"
                 android:layout_height="50dp" />
+            <Button
+                android:id="@+id/but_image"
+                android:layout_width="match_parent"
+                android:text="上传图片加密"
+                android:layout_height="50dp" />
             <TextView
                 android:id="@+id/textview"
                 android:layout_width="match_parent"
