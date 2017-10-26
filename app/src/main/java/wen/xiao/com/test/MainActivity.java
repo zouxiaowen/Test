@@ -13,7 +13,12 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.io.File;
+import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import wen.xiao.com.test.callback.JsonCallback;
 import wen.xiao.com.test.callback.JsonCallback_two;
@@ -118,19 +123,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
             case R.id.but_image:
+//                SPUtil sps=new SPUtil(this,"Test");
+//                String tokens =sps.getString("Token","");
+//                TreeMap map = new TreeMap();
+//                map.put("confidence", "123");
+//                map.put("userId", "953");
+//                map.put("livingImg", new File("/storage/emulated/0/wu.png"));
+//                Map<String, String> head = new TreeMap<>();
+//                head.put("token", tokens);
+//                head.put("uuid",loggingInterceptor.getUUid());
+//                head.put("signMsg",signParams(map,head.get("uuid")));
+
                 OkGo.<String>post(Urls.URL_FILE)//
                         .tag(this)//
                         .params("confidence","1")
-                        .params("livingImg","1")
-                        .params("userId","1")
+                        .params("userId","131")
+                        .params("livingImg", new File("/storage/emulated/0/wu.png"))
                         .isSpliceUrl(true)
                         .isMultipart(false)
-                        .upFile(new File(BaseParams.FACE_PHOTO_PATH + "/" + BaseParams.PHOTO_ALIVE))//
                         .execute(new JsonCallback_two<String>(this) {
                             @Override
                             public void onSuccess(Response<String> response) {
-
-                            }
+                            try {
+                                textView.setText(response.body().toString());
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                            }}
                         });
                 break;
         }
@@ -140,5 +158,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         OkGo.getInstance().cancelTag(this);
+    }
+
+
+    /**
+     * 提交文件 对Map数据进行签名
+     */
+    public String signParams(TreeMap<String, String> treeMap,String uuid) {
+        TreeMap<String, String> commonParamsTreeMap = new TreeMap<>();
+        commonParamsTreeMap.put("mobileType", "2");
+        commonParamsTreeMap.put("versionNumber", "1.0.3");
+        treeMap.putAll(commonParamsTreeMap);
+        String sign = getSign(treeMap,uuid);
+        return sign;
+    }
+    /**
+     * 一般接口调用-signa签名生成规则
+     *
+     * @param map
+     *         有序请求参数map
+     */
+    private String getSign(TreeMap map,String uuid) {
+        String signa = "";
+        try {
+            Iterator it = map.entrySet().iterator();
+            StringBuilder sb = new StringBuilder();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                if (entry.getValue() instanceof File)
+                    continue;//URLEncoder.encode(, "UTF-8")
+                sb.append(entry.getKey()).append("=").append(URLDecoder.decode(entry.getValue().toString(), "UTF-8")).append("|");
+            }
+            // 所有请求参数排序后的字符串后进行MD5（32）
+            //signa = MDUtil.encode(MDUtil.TYPE.MD5, sb.toString());
+            // 得到的MD5串拼接appsecret再次MD5，所得结果转大写
+            String sign = "";
+            if (sb.toString().length() > 1) {
+                sign = sb.toString().substring(0, sb.length() - 1);
+            } else {
+                sign = sb.toString();
+            }
+//            signa = MDUtil.encode(MDUtil.TYPE.MD5, AppConfig.APP_KEY + getToken() + sign + uuid).toUpperCase();
+            SPUtil sp=new SPUtil(this,"Test");
+            String token =sp.getString("Token","");
+            signa = MDUtil.encode(MDUtil.TYPE.MD5, "wI3Ri3pntEs6CXp5VlLGlQtxHLKqONp5OQ4Yk6WxcZcAZGYYnyycRJo895qf" +token+ sign + uuid).toUpperCase();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return signa;
     }
 }

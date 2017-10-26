@@ -34,7 +34,7 @@ public class APP extends Application {
             loggingInterceptor.setPrintLevel(LogHttp.Level.NONE);        //log打印级别，决定了log显示的详细程度
 
         }
-        loggingInterceptor.setColorLevel(Level.INFO);                               //log颜色级别，决定了log在控制台显示的颜色
+        loggingInterceptor.setColorLevel(Level.WARNING);                               //log颜色级别，决定了log在控制台显示的颜色
         builder.addInterceptor(loggingInterceptor);                                 //添加OkGo默认debug日志
         OkGo.getInstance()
                 .setOkHttpClient(builder.build())

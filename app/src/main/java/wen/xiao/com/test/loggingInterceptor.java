@@ -127,7 +127,17 @@ public class loggingInterceptor implements Interceptor {
         }
     }
 
-
+    /**
+     * 提交文件 对Map数据进行签名
+     */
+    public String signParams(TreeMap<String, String> treeMap,String uuid) {
+        TreeMap<String, String> commonParamsTreeMap = new TreeMap<>();
+        commonParamsTreeMap.put("mobileType", "2");
+        commonParamsTreeMap.put("versionNumber", "1.0.3");
+        treeMap.putAll(commonParamsTreeMap);
+        String sign = getSign(treeMap,uuid);
+        return sign;
+    }
 
 
 
@@ -175,6 +185,8 @@ public class loggingInterceptor implements Interceptor {
             SPUtil sp=new SPUtil(context,"Test");
             String token =sp.getString("Token","");
             signa = MDUtil.encode(MDUtil.TYPE.MD5, "wI3Ri3pntEs6CXp5VlLGlQtxHLKqONp5OQ4Yk6WxcZcAZGYYnyycRJo895qf" +token+ sign + uuid).toUpperCase();
+        } catch (IllegalArgumentException i){
+            //文件上传截取路径有误  但不影响
         } catch (Exception e) {
             e.printStackTrace();
         }
