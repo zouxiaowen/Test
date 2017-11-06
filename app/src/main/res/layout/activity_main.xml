@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="wen.xiao.com.test.MainActivity">
+   >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,6 +38,11 @@
                 android:id="@+id/but_image"
                 android:layout_width="match_parent"
                 android:text="上传图片加密"
+                android:layout_height="50dp" />
+            <Button
+                android:id="@+id/but_ocr"
+                android:layout_width="match_parent"
+                android:text="身份证识别"
                 android:layout_height="50dp" />
             <TextView
                 android:id="@+id/textview"

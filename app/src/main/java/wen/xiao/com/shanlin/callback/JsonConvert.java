@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wen.xiao.com.test.callback;
+package wen.xiao.com.shanlin.callback;
 
 import com.google.gson.stream.JsonReader;
 import com.lzy.okgo.convert.Converter;
@@ -26,8 +26,8 @@ import java.lang.reflect.Type;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import wen.xiao.com.test.entity.SimpleResponse;
-import wen.xiao.com.test.utils.Convert;
+import wen.xiao.com.shanlin.entity.SimpleResponse;
+import wen.xiao.com.shanlin.utils.Convert;
 
 /**
  * ================================================

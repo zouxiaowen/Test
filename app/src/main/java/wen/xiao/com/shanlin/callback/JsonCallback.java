@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wen.xiao.com.test.callback;
+package wen.xiao.com.shanlin.callback;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.request.base.Request;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import okhttp3.Response;
-import wen.xiao.com.test.SPUtil;
-import wen.xiao.com.test.utils.ToastUtil;
+import wen.xiao.com.shanlin.SPUtil;
+import wen.xiao.com.shanlin.utils.ToastUtil;
 
 /**
  * ================================================

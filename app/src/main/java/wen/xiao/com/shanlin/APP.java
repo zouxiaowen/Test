@@ -1,17 +1,13 @@
-package wen.xiao.com.test;
+package wen.xiao.com.shanlin;
 
 import android.app.Application;
 
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
-import com.lzy.okgo.model.HttpParams;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
+
 
 /**
  * Created by Administrator on 2017/10/13.

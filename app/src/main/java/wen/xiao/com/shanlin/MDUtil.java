@@ -1,4 +1,4 @@
-package wen.xiao.com.test;
+package wen.xiao.com.shanlin;
 
 import java.io.File;
 import java.io.FileInputStream;

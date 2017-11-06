@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wen.xiao.com.test.entity;
+package wen.xiao.com.shanlin.callback;
 
 import java.io.Serializable;
-
-import wen.xiao.com.test.callback.LzyResponse;
 
 /**
  * ================================================
@@ -28,17 +26,20 @@ import wen.xiao.com.test.callback.LzyResponse;
  * 修订历史：
  * ================================================
  */
-public class SimpleResponse implements Serializable {
+public class LzyResponse<T> implements Serializable {
 
-    private static final long serialVersionUID = -1477609349345966116L;
+    private static final long serialVersionUID = 5213230387175987834L;
 
     public int code;
     public String msg;
+    public T data;
 
-    public LzyResponse toLzyResponse() {
-        LzyResponse lzyResponse = new LzyResponse();
-        lzyResponse.code = code;
-        lzyResponse.msg = msg;
-        return lzyResponse;
+    @Override
+    public String toString() {
+        return "LzyResponse{\n" +//
+               "\tcode=" + code + "\n" +//
+               "\tmsg='" + msg + "\'\n" +//
+               "\tdata=" + data + "\n" +//
+               '}';
     }
 }

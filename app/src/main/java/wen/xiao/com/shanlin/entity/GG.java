@@ -1,4 +1,4 @@
-package wen.xiao.com.test.entity;
+package wen.xiao.com.shanlin.entity;
 
 import java.util.List;
 

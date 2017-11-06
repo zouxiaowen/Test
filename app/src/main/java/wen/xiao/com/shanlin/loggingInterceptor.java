@@ -1,12 +1,6 @@
-package wen.xiao.com.test;
+package wen.xiao.com.shanlin;
 
 import android.content.Context;
-import android.provider.SyncStateContract;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,14 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeMap;
 
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;

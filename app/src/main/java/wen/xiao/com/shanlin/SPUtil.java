@@ -1,4 +1,4 @@
-package wen.xiao.com.test;
+package wen.xiao.com.shanlin;
 
 import android.content.Context;
 import android.content.SharedPreferences;
