@@ -6,6 +6,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.DocumentsContract;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +48,7 @@ import wen.xiao.com.shanlin.utils.ToastUtil;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button but_log, but_post, but_get, but_agreement, but_image, but_ocr;
     private TextView textView;
-
+    private ImageView image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void InItView() {
+        image= (ImageView) findViewById(R.id.image);
         but_log = (Button) findViewById(R.id.but_log);
         but_log.setOnClickListener(this);
         but_post = (Button) findViewById(R.id.but_post);
@@ -303,25 +307,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri uri = data.getData();
-        String path=getRealPathFromUri(this,uri);
-        ToastUtil.toast(path);
-                        OkGo.<String>post(Urls.URL_FILE)//
-                        .tag(this)//
-                        .params("confidence","1")
-                        .params("userId","131")
-                        .params("livingImg", new File(path))
-                        .isSpliceUrl(true)
-                        .isMultipart(false)
-                        .execute(new JsonCallback_two<String>(this) {
-                            @Override
-                            public void onSuccess(Response<String> response) {
+
+        if(requestCode== 0&&Activity.RESULT_OK==resultCode&& null!=data){
+
+            Uri uri = data.getData();
+            String path=getRealPathFromUri(this,uri);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+            Bitmap img = BitmapFactory.decodeFile(path,options);
+            image.setImageBitmap(img);
+            ToastUtil.toast(path);
+            OkGo.<String>post(Urls.URL_FILE)//
+                    .tag(this)//
+                    .params("confidence","1")
+                    .params("userId","131")
+                    .params("livingImg", new File(path))
+                    .isSpliceUrl(true)
+                    .isMultipart(false)
+                    .execute(new JsonCallback_two<String>(this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
                             try {
                                 textView.setText(response.body().toString());
                             }catch (Exception e) {
                                 e.printStackTrace();
                             }}
-                        });
+                    });
+        }
+
+
+
+
     }
 
 
