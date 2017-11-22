@@ -71,15 +71,6 @@ public abstract class JsonCallback_two<T> extends AbsCallback<T> {
         int useId =sp_id.getInt("useId",0);
         HttpParams par = request.getParams();
         LinkedHashMap<String, List<String>> map = par.urlParamsMap;
-
-//        request. params("versionNumber", "1.0.3").
-//        params("mobileType", "2").
-//        params("serialVersionUID", "402476310254065018").
-//        params("userId",useId).
-//        params("Token",token);
-//        request.headers("header1", "HeaderValue1")//
-//                .params("params1", "ParamsValue1")//
-//                .params("token", "3215sdf13ad1f65asd4f3ads1f");
     }
 
     /**

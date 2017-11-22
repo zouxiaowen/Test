@@ -46,7 +46,7 @@ import wen.xiao.com.shanlin.callback.LzyResponse;
 import wen.xiao.com.shanlin.utils.ToastUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button but_log, but_post, but_get, but_agreement, but_image, but_ocr;
+    private Button but_log, but_post, but_get, but_agreement, but_image, but_ocr,but_file;
     private TextView textView;
     private ImageView image;
     @Override
@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void InItView() {
         image= (ImageView) findViewById(R.id.image);
+        but_file= (Button) findViewById(R.id.but_file);
+        but_file.setOnClickListener(this);
         but_log = (Button) findViewById(R.id.but_log);
         but_log.setOnClickListener(this);
         but_post = (Button) findViewById(R.id.but_post);
@@ -115,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 spUtil_id.clear();
                 OkGo.<LzyResponse<use>>post(Urls.URL_METHOD)//
                         .tag(this)//
-                        .params("loginName", "17671623091")
-                        .params("loginPwd", "E67C10A4C8FBFC0C400E047BB9A056A1")
+                        .params("loginName", "15821145929")
+                        .params("loginPwd", "200820e3227815ed1756a6b531e7e0d2")
                         .isMultipart(false)
                         .execute(new JsonCallback<LzyResponse<use>>(this) {
                             @Override
@@ -179,27 +181,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivityForResult(intent, 0);
+                break;
 
-
-
-
-
-//                OkGo.<String>post(Urls.URL_FILE)//
-//                        .tag(this)//
-//                        .params("confidence","1")
-//                        .params("userId","131")
-//                        .params("livingImg", new File("/storage/emulated/0/wu.png"))
-//                        .isSpliceUrl(true)
-//                        .isMultipart(false)
-//                        .execute(new JsonCallback_two<String>(this) {
-//                            @Override
-//                            public void onSuccess(Response<String> response) {
-//                            try {
-//                                textView.setText(response.body().toString());
-//                            }catch (Exception e) {
-//                                e.printStackTrace();
-//                            }}
-//                        });
+            case R.id.but_file://上传文件
+                OkGo.<String>post(Urls.URL_FILES)//
+                        .tag(this)//
+                        .params("image", new File("/storage/emulated/0/wu.png"))
+                        .isSpliceUrl(true)
+                        .isMultipart(false)
+                        .execute(new JsonCallback_two<String>(this) {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                            try {
+                                textView.setText(response.body().toString());
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                            }}
+                        });
                 break;
         }
     }

@@ -48,6 +48,12 @@ public class loggingInterceptor implements Interceptor {
                String singne = getSign(maps,uuid);
                requestBuilder = chain.request().newBuilder().addHeader("signMsg", singne).addHeader("token", token).addHeader("uuid", uuid);
 
+           }else if (url.contains("open/test.htm")){
+               Map map_get = splitGetUrl(originRequest.url().toString(), headerParamsMap);
+               TreeMap maps = new TreeMap(map_get);
+               String singne = getSign(maps,uuid);
+               requestBuilder = chain.request().newBuilder().addHeader("signMsg", singne).addHeader("token", token).addHeader("uuid", uuid);
+
            }else {
                //添加到header里面
                requestBuilder = chain.request().newBuilder().addHeader("signMsg", sign).addHeader("token", token).addHeader("uuid", uuid);
